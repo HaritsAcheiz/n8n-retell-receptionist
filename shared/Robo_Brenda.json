@@ -362,6 +362,19 @@
     },
     {
       "parameters": {
+        "jsCode": "// Lead Qualification Logic for Apex Roofing\nconst args = $json.args || {};\nconst service = (args.service_requested || \"\").toLowerCase();\nconst email = (args.caller_email || \"\").toLowerCase();\n\nlet score = 0;\nlet status = \"new_lead\";\n\n// 1. Service Urgency Score (High for active issues)\nif (service.includes(\"leak\") || service.includes(\"emergency\") || service.includes(\"storm\")) {\n  score += 50;\n} else if (service.includes(\"replacement\") || service.includes(\"new roof\")) {\n  score += 30;\n}\n\n// 2. Business/Professional Email Score\nconst professionalDomains = [\"gmail.com\", \"outlook.com\", \"yahoo.com\", \"icloud.com\"];\nconst domain = email.split(\"@\")[1];\nif (domain && !professionalDomains.includes(domain)) {\n  score += 20; // Potential commercial lead\n}\n\n// 3. Status assignment\nif (score >= 50) {\n  status = \"contacted\"; // Prioritize high-value/urgent leads\n}\n\nreturn {\n  args: {\n    ...args,\n    lead_score: score,\n    lead_status: status\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        384
+      ],
+      "id": "qualify-lead-code",
+      "name": "Qualify Lead"
+    },
+    {
+      "parameters": {
         "operation": "create",
         "base": {
           "__rl": true,
@@ -383,7 +396,9 @@
             "lead_name": "={{ $json.args.caller_name }}",
             "phone_number": "={{ $json.args.caller_phone_number }}",
             "email": "={{ $json.args.caller_email }}",
-            "service_requested": "={{ $json.args.service_requested }}"
+            "service_requested": "={{ $json.args.service_requested }}",
+            "lead_status": "={{ $json.args.lead_status }}",
+            "notes": "=Lead Score: {{ $json.args.lead_score }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -593,6 +608,17 @@
             "index": 0
           }
         ],
+        [
+          {
+            "node": "Qualify Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qualify Lead": {
+      "main": [
         [
           {
             "node": "Create lead",

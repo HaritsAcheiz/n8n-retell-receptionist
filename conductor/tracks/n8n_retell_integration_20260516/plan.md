@@ -17,7 +17,7 @@ Build a production-ready AI receptionist template that handles voice interaction
 
 ### 3. "Production-Ready" Pillars
 - [x] **Error Handling:** Implement fallback responses for API failures or AI confusion. (Added 'onError' paths to all tool nodes)
-- [ ] **Lead Qualification Logic:** Add a "scoring" step to identify high-value callers.
+- [x] **Lead Qualification Logic:** Add a "scoring" step to identify high-value callers. (Added 'Qualify Lead' Code node)
 - [ ] **Human Handoff:** Create a mechanism for call transfer to human agents.
 
 ### 4. Post-Call Automation
