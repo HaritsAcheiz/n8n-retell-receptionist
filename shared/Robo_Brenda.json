@@ -1,0 +1,661 @@
+{
+  "name": "Robo_Brenda",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "retell",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        128
+      ],
+      "id": "d49d3e49-67db-44c7-ba05-ed6d75ff5eea",
+      "name": "Webhook",
+      "webhookId": "5294f5c8-e4f8-4c67-8ed7-679bdded2e2c",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "retell-webhook-auth",
+          "name": "Retell Webhook Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "book_appointment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "bd6738fe-49d5-441b-889e-a2fdcbf4f7ec"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "1af9a7b8-97e3-475c-9ac2-647dd1cbd742",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "create_support_ticket",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "1ddf2740-6bdc-4aee-b1d6-8b749c14221b",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "capture_lead",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        112
+      ],
+      "id": "c6d6f353-7d6c-4fdc-9e37-c46e8b425f70",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"message\": \"Appointment successfully confirmed for \",\n  \"booking_reference\": \"CAL-9876\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1152,
+        128
+      ],
+      "id": "0ec156fb-8512-4594-8070-d86015d3e394",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cal.com/v2/bookings",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "cal-api-version",
+              "value": "2026-02-25"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"start\": \"{{ $json.args.requested_time }}\",\n  \"attendee\": {\n    \"name\": \"{{ $json.args.caller_name }}\",\n    \"email\": \"{{ $json.args.caller_emai }}\",\n    \"timeZone\": \"America/New_York\",\n    \"language\": \"en\"\n  },\n  \"eventTypeId\": 5250255,\n  \"allowConflicts\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        -176
+      ],
+      "id": "bdbbbba1-f52a-4a57-bcce-3071be80ac5c",
+      "name": "Create Booking",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "QJLexwN33UpWkhBA",
+          "name": "Calcom_Auth_Token"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"error\",\n  \"message\": \"The requested time slot is unavailable. Please apologize and ask the user for a different time or day.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        -96
+      ],
+      "id": "b036c186-471d-40ba-9cb3-2ddc6df7074f",
+      "name": "Edit Unavailable Response"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"status\": \"success\",\n  \"message\": \"Appointment booked successfully.\",\n  \"booking_uid\": \"{{ $json.data.uid }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        -256
+      ],
+      "id": "6130ca12-64b0-4beb-93f2-c2f8592474fe",
+      "name": "Edit Available Response"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app7Wh0FWazM8L6jf",
+          "mode": "list",
+          "cachedResultName": "ai_receptionist_crm",
+          "cachedResultUrl": "https://airtable.com/app7Wh0FWazM8L6jf"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblygKESbexy1qgwf",
+          "mode": "list",
+          "cachedResultName": "support_tickets",
+          "cachedResultUrl": "https://airtable.com/app7Wh0FWazM8L6jf/tblygKESbexy1qgwf"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "caller_name": "={{ $json.args.caller_name }}",
+            "caller_email": "={{ $json.args.caller_email }}",
+            "issue_description": "={{ $json.args.issue_description }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ticket_number",
+              "displayName": "ticket_number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "caller_name",
+              "displayName": "caller_name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "caller_email",
+              "displayName": "caller_email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "issue_description",
+              "displayName": "issue_description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "last_modified",
+              "displayName": "last_modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "open",
+                  "value": "open"
+                },
+                {
+                  "name": "resolved",
+                  "value": "resolved"
+                },
+                {
+                  "name": "in progress",
+                  "value": "in progress"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        544,
+        128
+      ],
+      "id": "54b92c69-a6ab-48bb-a600-edb8b818318d",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "uKaC4L4d0dzqommt",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"status\": \"success\",\n  \"ticket_number\": {{ $json.fields.ticket_number }},\n  \"message\": \"Support ticket logged successfully.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        128
+      ],
+      "id": "40184da9-525c-4f9f-9154-81a543a12def",
+      "name": "Edit support ticket response"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app7Wh0FWazM8L6jf",
+          "mode": "list",
+          "cachedResultName": "ai_receptionist_crm",
+          "cachedResultUrl": "https://airtable.com/app7Wh0FWazM8L6jf"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl5KVGMjBRtC0XFa",
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "https://airtable.com/app7Wh0FWazM8L6jf/tbl5KVGMjBRtC0XFa"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_name": "={{ $json.args.caller_name }}",
+            "phone_number": "={{ $json.args.caller_phone_number }}",
+            "email": "={{ $json.args.caller_email }}",
+            "service_requested": "={{ $json.args.service_requested }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_name",
+              "displayName": "lead_name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "phone_number",
+              "displayName": "phone_number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "service_requested",
+              "displayName": "service_requested",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_status",
+              "displayName": "lead_status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "new_lead",
+                  "value": "new_lead"
+                },
+                {
+                  "name": "contacted",
+                  "value": "contacted"
+                },
+                {
+                  "name": "disqualified",
+                  "value": "disqualified"
+                },
+                {
+                  "name": "closed_won",
+                  "value": "closed_won"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "last_modified",
+              "displayName": "last_modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        544,
+        384
+      ],
+      "id": "c0e03c52-6bec-4713-98c6-b5991d510455",
+      "name": "Create lead",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "uKaC4L4d0dzqommt",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"status\": \"success\",\n  \"message\": \"Lead captured successfully. The sales team has been notified.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        384
+      ],
+      "id": "7026b887-cefb-41e2-b71c-72e18f6658e6",
+      "name": "Edit capture lead response"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "name": "capture_lead",
+          "args": {
+            "caller_name": "John Doe",
+            "caller_phone_number": "+6285674590754",
+            "caller_email": "john.doe@gmail.com",
+            "service_requested": "I'm looking to get my roof replaced next month and wanted to get a quote."
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Create Booking",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Create Booking": {
+      "main": [
+        [
+          {
+            "node": "Edit Available Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Unavailable Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Unavailable Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Available Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Edit support ticket response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit support ticket response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create lead": {
+      "main": [
+        [
+          {
+            "node": "Edit capture lead response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit capture lead response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c1e42a0a-9b78-48cd-b8f5-86c9657ed0ea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9bd44a3e0b73394374a208807eb477b6926d3aa2485021c18ffd7ca062e93657"
+  },
+  "id": "MLpY0ZlIurkojlDC",
+  "tags": []
+}

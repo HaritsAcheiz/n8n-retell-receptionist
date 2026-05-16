@@ -8,7 +8,7 @@ Build a production-ready AI receptionist template that handles voice interaction
 ### 1. Core Integration & Webhook Setup
 - [x] **Webhook Infrastructure:** Establish robust n8n endpoints for Retell AI tool calls. (Implemented in `shared/Robo_Brenda.json`)
 - [x] **Retell Agent Config:** Define a structured system prompt (Role, Goal, Constraints) based on the "Robo_Brenda" persona. (Created `shared/Retell_Agent_Prompt.md`)
-- [ ] **Authentication:** Secure communication between n8n and Retell AI.
+- [x] **Authentication:** Secure communication between n8n and Retell AI. (Implemented Header Auth in Webhook)
 
 ### 2. Real-Time Tool Development
 - [x] **Lead Capture:** Integrate Airtable for capturing caller details and qualifying leads. (Implemented)
