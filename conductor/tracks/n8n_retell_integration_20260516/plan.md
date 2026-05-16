@@ -21,7 +21,7 @@ Build a production-ready AI receptionist template that handles voice interaction
 - [x] **Human Handoff:** Create a mechanism for call transfer to human agents. (Added 'transfer_call' tool and workflow branch)
 
 ### 4. Post-Call Automation
-- [ ] **Summary & Sentiment:** Use AI nodes in n8n to generate call summaries and analyze caller sentiment.
+- [x] **Summary & Sentiment:** Use AI nodes in n8n to generate call summaries and analyze caller sentiment. (Created `shared/Post_Call_Automation.json`)
 - [ ] **Follow-up System:** Send automated SMS/Email confirmations after successful interactions.
 
 ### 5. Documentation & Template

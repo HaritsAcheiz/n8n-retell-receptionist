@@ -1,0 +1,124 @@
+{
+  "name": "Post_Call_Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "retell-call-ended",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        128
+      ],
+      "id": "webhook-call-ended",
+      "name": "Call Ended Webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "retell-webhook-auth",
+          "name": "Retell Webhook Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Please summarize the following call transcript between our AI Receptionist (Brenda) and a customer. Also, identify the caller's sentiment (Positive, Neutral, or Negative).\n\nTranscript:\n{{ $json.transcript }}\n\nReturn the result in JSON format:\n{\n  \"summary\": \"...\",\n  \"sentiment\": \"...\"\n}"
+            }
+          ]
+        },
+        "jsonOutput": true
+      },
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        128
+      ],
+      "id": "openai-summary-sentiment",
+      "name": "Summarize & Sentiment",
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-api-key",
+          "name": "OpenAI API Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app7Wh0FWazM8L6jf",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl_call_logs",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "call_id": "={{ $node[\"Call Ended Webhook\"].json.call_id }}",
+            "summary": "={{ $json.message.content.summary }}",
+            "sentiment": "={{ $json.message.content.sentiment }}",
+            "recording_url": "={{ $node[\"Call Ended Webhook\"].json.recording_url }}",
+            "duration_ms": "={{ $node[\"Call Ended Webhook\"].json.duration_ms }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        128
+      ],
+      "id": "airtable-log-call",
+      "name": "Log Call to Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "uKaC4L4d0dzqommt",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Call Ended Webhook": {
+      "main": [
+        [
+          {
+            "node": "Summarize & Sentiment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize & Sentiment": {
+      "main": [
+        [
+          {
+            "node": "Log Call to Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
