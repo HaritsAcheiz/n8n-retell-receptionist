@@ -22,7 +22,7 @@ Build a production-ready AI receptionist template that handles voice interaction
 
 ### 4. Post-Call Automation
 - [x] **Summary & Sentiment:** Use AI nodes in n8n to generate call summaries and analyze caller sentiment. (Created `shared/Post_Call_Automation.json`)
-- [ ] **Follow-up System:** Send automated SMS/Email confirmations after successful interactions.
+- [x] **Follow-up System:** Send automated SMS/Email confirmations after successful interactions. (Added Twilio SMS node to post-call workflow)
 
 ### 5. Documentation & Template
 - [ ] **Import/Export:** Ensure the n8n workflow (JSON) is modular and easy to import.

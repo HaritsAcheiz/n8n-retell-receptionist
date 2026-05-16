@@ -91,6 +91,28 @@
           "name": "Airtable Personal Access Token account"
         }
       }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $node[\"Call Ended Webhook\"].json.from_number }}",
+        "message": "=Hi! This is Robo Brenda from Apex Roofing. Thanks for your call! \n\nSummary of our talk: {{ $node[\"Summarize & Sentiment\"].json.message.content.summary }}\n\nWe'll be in touch soon!"
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        672,
+        128
+      ],
+      "id": "twilio-sms-followup",
+      "name": "SMS Follow-up",
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-api-key",
+          "name": "Twilio Account"
+        }
+      }
     }
   ],
   "connections": {
@@ -110,6 +132,17 @@
         [
           {
             "node": "Log Call to Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Call to Airtable": {
+      "main": [
+        [
+          {
+            "node": "SMS Follow-up",
             "type": "main",
             "index": 0
           }
