@@ -59,13 +59,17 @@ RETELL_API_KEY=key_...
 
 ---
 
-## Step 3: Building the n8n "Traffic Cop"
+### Step 3: Building the n8n "Traffic Cop"
 In n8n, create a new workflow and add a **Webhook Node**.
 - **Path:** `retell`
 - **Authentication:** **Header Auth** (This is crucial for production security).
 - **Respond:** Set to "Using 'Respond to Webhook' Node."
 
+> **💡 Power User Tip:** Since you are running in Docker, you can import our pre-built workflows instantly via the CLI:
+> `docker exec -it n8n n8n import:workflow --separate --input=/data/shared/`
+
 Add a **Switch Node** connected to the Webhook. Configure it to route based on `{{ $json.body.name }}`:
+
 1. `book_appointment` -> Output 0
 2. `create_support_ticket` -> Output 1
 3. `capture_lead` -> Output 2

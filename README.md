@@ -48,10 +48,21 @@ Create an Airtable base with the following tables:
 - **support_tickets:** `caller_name`, `caller_email`, `issue_description`, `status`.
 - **tbl_call_logs:** `call_id`, `summary`, `sentiment`, `recording_url`, `duration_ms`.
 
-### 3. n8n Workflow Import
-1.  Import `shared/Robo_Brenda.json` (Live Tool Calls).
-2.  Import `shared/Post_Call_Automation.json` (Post-Call Processing).
-3.  Ensure credentials for Airtable, OpenAI, Cal.com, and Twilio are linked in n8n.
+### 3. n8n Workflow Import (CLI Method)
+
+Since you are running n8n in Docker, the fastest way to import these workflows is via the n8n CLI. The `./shared` folder is already mapped to `/data/shared` inside your container.
+
+Run these commands from your host terminal:
+
+```bash
+# Import all workflows from the shared directory
+docker exec -it n8n n8n import:workflow --separate --input=/data/shared/
+
+# Import credentials (if you have exported them previously)
+# docker exec -it n8n n8n import:credentials --separate --input=/data/shared/
+```
+
+*Note: After importing, you will still need to manually create and link your API credentials in the n8n UI, as they are not included in the JSON files for security.*
 
 ### 4. Retell AI Agent Setup
 1.  Create a new Agent in Retell AI.
