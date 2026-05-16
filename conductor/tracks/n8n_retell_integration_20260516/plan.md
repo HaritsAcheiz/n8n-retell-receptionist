@@ -18,7 +18,7 @@ Build a production-ready AI receptionist template that handles voice interaction
 ### 3. "Production-Ready" Pillars
 - [x] **Error Handling:** Implement fallback responses for API failures or AI confusion. (Added 'onError' paths to all tool nodes)
 - [x] **Lead Qualification Logic:** Add a "scoring" step to identify high-value callers. (Added 'Qualify Lead' Code node)
-- [ ] **Human Handoff:** Create a mechanism for call transfer to human agents.
+- [x] **Human Handoff:** Create a mechanism for call transfer to human agents. (Added 'transfer_call' tool and workflow branch)
 
 ### 4. Post-Call Automation
 - [ ] **Summary & Sentiment:** Use AI nodes in n8n to generate call summaries and analyze caller sentiment.

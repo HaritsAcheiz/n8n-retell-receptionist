@@ -96,6 +96,29 @@
                 ],
                 "combinator": "and"
               }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "transfer-call-rule",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "transfer_call",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
             }
           ]
         },
@@ -551,6 +574,21 @@
     },
     {
       "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"forward_to_number\": \"+1234567890\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        544,
+        512
+      ],
+      "id": "transfer-call-response",
+      "name": "Transfer Call Response"
+    },
+    {
+      "parameters": {
         "mode": "raw",
         "jsonOutput": "{\n  \"status\": \"error\",\n  \"message\": \"I'm sorry, I didn't quite catch that or I'm having trouble processing that request. Could you please repeat what you need?\"\n}",
         "options": {}
@@ -559,7 +597,7 @@
       "typeVersion": 3.4,
       "position": [
         544,
-        600
+        640
       ],
       "id": "global-fallback-set",
       "name": "Global Fallback Response"
@@ -611,6 +649,13 @@
         [
           {
             "node": "Qualify Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transfer Call Response",
             "type": "main",
             "index": 0
           }
@@ -715,6 +760,11 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "Transfer Call Response": {
+      "main": [
+        []
       ]
     }
   },
