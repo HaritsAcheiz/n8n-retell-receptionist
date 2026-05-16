@@ -26,7 +26,7 @@ Build a production-ready AI receptionist template that handles voice interaction
 
 ### 5. Documentation & Template
 - [x] **Import/Export:** Ensure the n8n workflow (JSON) is modular and easy to import. (Replaced hardcoded IDs with environment variables)
-- [ ] **User Guide:** Create a README for end-users to set up their own version of the template.
+- [x] **User Guide:** Create a README for end-users to set up their own version of the template. (Updated root `README.md`)
 
 ## Verification
 - [x] Verify data persistence in Airtable.
