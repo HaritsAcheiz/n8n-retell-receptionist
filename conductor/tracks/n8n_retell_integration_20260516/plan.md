@@ -16,7 +16,7 @@ Build a production-ready AI receptionist template that handles voice interaction
 - [x] **Support Ticket System:** Implement logic for logging issues directly into Airtable or a CRM. (Implemented)
 
 ### 3. "Production-Ready" Pillars
-- [ ] **Error Handling:** Implement fallback responses for API failures or AI confusion.
+- [x] **Error Handling:** Implement fallback responses for API failures or AI confusion. (Added 'onError' paths to all tool nodes)
 - [ ] **Lead Qualification Logic:** Add a "scoring" step to identify high-value callers.
 - [ ] **Human Handoff:** Create a mechanism for call transfer to human agents.
 

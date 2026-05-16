@@ -327,7 +327,23 @@
           "id": "uKaC4L4d0dzqommt",
           "name": "Airtable Personal Access Token account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"error\",\n  \"message\": \"I'm sorry, I'm having trouble logging that support ticket right now. Can I take your number and have a manager call you back?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        208
+      ],
+      "id": "support-error-set",
+      "name": "Support Error Response"
     },
     {
       "parameters": {
@@ -485,7 +501,23 @@
           "id": "uKaC4L4d0dzqommt",
           "name": "Airtable Personal Access Token account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"error\",\n  \"message\": \"I'm having a technical issue saving your details. Don't worry, I'll notify my team manually. Can you confirm your phone number one more time?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        464
+      ],
+      "id": "lead-error-set",
+      "name": "Lead Error Response"
     },
     {
       "parameters": {
@@ -501,6 +533,21 @@
       ],
       "id": "7026b887-cefb-41e2-b71c-72e18f6658e6",
       "name": "Edit capture lead response"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"error\",\n  \"message\": \"I'm sorry, I didn't quite catch that or I'm having trouble processing that request. Could you please repeat what you need?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        600
+      ],
+      "id": "global-fallback-set",
+      "name": "Global Fallback Response"
     }
   ],
   "pinData": {
