@@ -63,5 +63,17 @@ Create an Airtable base with the following tables:
     - `transfer_call`: Point to your n8n `/retell` webhook.
 4.  Set the **Call Ended Webhook** in Retell to point to your n8n `/retell-call-ended` endpoint.
 
+## 🚀 Deployment (Hetzner / VPS)
+
+To move from local development to production, follow these steps:
+
+1.  **Prepare VPS:** Spin up an Ubuntu 22.04 instance (Hetzner CX21 is recommended).
+2.  **Install Docker:** Run `curl -fsSL https://get.docker.com | sh`.
+3.  **Clone Repo:** `git clone https://github.com/HaritsAcheiz/n8n-retell-receptionist.git`.
+4.  **Configure Env:** Create `.env` from the prerequisites section.
+5.  **Launch:** Run `docker compose up -d`.
+6.  **Secure Access:** Set up a reverse proxy (like Nginx Proxy Manager or Caddy) to map your domain to port `5678` with SSL.
+7.  **Update Webhooks:** Update the tool URLs in Retell AI dashboard to point to your live domain (e.g., `https://n8n.yourdomain.com/webhook/retell`).
+
 ## 📄 License
 MIT

@@ -123,6 +123,17 @@ The conversation doesn't end when the caller hangs up. We built a secondary work
 
 ---
 
+## Step 6: Deployment to Production (Hetzner VPS)
+To turn this from a local prototype into a live business asset, we need a reliable home for n8n.
+
+1.  **Server Setup:** Use a **Hetzner CX21** (Ubuntu 22.04). It’s low-cost and high-performance.
+2.  **Environment:** Install Docker and Clone your repository.
+3.  **Launch:** Run `docker compose up -d` to start the engine.
+4.  **Reverse Proxy:** Use **Caddy** or **Nginx Proxy Manager** to map your server IP to a clean domain with SSL (e.g., `https://n8n.youragency.com`).
+5.  **Final Step:** Update your tool URLs in the Retell dashboard to point to your new live domain.
+
+---
+
 ## Technical Architecture
 We use a **Dual-Loop Architecture** to minimize latency during the call:
 
