@@ -48,32 +48,6 @@ Create an Airtable base with the following tables:
 - **support_tickets:** `caller_name`, `caller_email`, `issue_description`, `status`.
 - **tbl_call_logs:** `call_id`, `summary`, `sentiment`, `recording_url`, `duration_ms`.
 
-### 3. n8n Workflow Import (CLI Method)
-
-Since you are running n8n in Docker, the fastest way to import these workflows is via the n8n CLI. The `./shared` folder is already mapped to `/data/shared` inside your container.
-
-Run these commands from your host terminal:
-
-```bash
-# Import all workflows from the shared directory
-docker exec -it n8n n8n import:workflow --separate --input=/data/shared/
-
-# Import credentials (if you have exported them previously)
-# docker exec -it n8n n8n import:credentials --separate --input=/data/shared/
-```
-
-*Note: After importing, you will still need to manually create and link your API credentials in the n8n UI, as they are not included in the JSON files for security.*
-
-### 4. Retell AI Agent Setup
-1.  Create a new Agent in Retell AI.
-2.  Paste the content of `shared/Retell_Agent_Prompt.md` into the **System Prompt**.
-3.  Configure Tools in Retell:
-    - `capture_lead`: Point to your n8n `/retell` webhook.
-    - `book_appointment`: Point to your n8n `/retell` webhook.
-    - `create_support_ticket`: Point to your n8n `/retell` webhook.
-    - `transfer_call`: Point to your n8n `/retell` webhook.
-4.  Set the **Call Ended Webhook** in Retell to point to your n8n `/retell-call-ended` endpoint.
-
 ## 🚀 Deployment (Hetzner / VPS)
 
 To move from local development to production, follow these steps:
@@ -84,7 +58,30 @@ To move from local development to production, follow these steps:
 4.  **Configure Env:** Create `.env` from the prerequisites section.
 5.  **Launch:** Run `docker compose up -d`.
 6.  **Secure Access:** Set up a reverse proxy (like Nginx Proxy Manager or Caddy) to map your domain to port `5678` with SSL.
-7.  **Update Webhooks:** Update the tool URLs in Retell AI dashboard to point to your live domain (e.g., `https://n8n.yourdomain.com/webhook/retell`).
+
+### 3. n8n Workflow Import (CLI Method)
+
+Once your Docker containers are running, you can import the workflows via the n8n CLI. The `./shared` folder is already mapped to `/data/shared` inside your container.
+
+Run these commands from your host terminal:
+
+```bash
+# Import all workflows from the shared directory
+docker exec -it n8n n8n import:workflow --separate --input=/data/shared/
+```
+
+*Note: After importing, you will still need to manually create and link your API credentials in the n8n UI.*
+
+### 4. Retell AI Agent Setup
+1.  Create a new Agent in Retell AI.
+2.  Paste the content of `shared/Retell_Agent_Prompt.md` into the **System Prompt**.
+3.  Configure Tools in Retell:
+    - `capture_lead`: Point to your n8n `/retell` webhook.
+    - `book_appointment`: Point to your n8n `/retell` webhook.
+    - `create_support_ticket`: Point to your n8n `/retell` webhook.
+    - `transfer_call`: Point to your n8n `/retell` webhook.
+4.  Set the **Call Ended Webhook** in Retell to point to your n8n `/retell-call-ended` endpoint.
+5.  **Update Webhooks:** Update the tool URLs in Retell AI dashboard to point to your live domain (e.g., `https://n8n.yourdomain.com/webhook/retell`).
 
 ## 📄 License
 MIT
