@@ -57,12 +57,12 @@
         "operation": "create",
         "base": {
           "__rl": true,
-          "value": "app7Wh0FWazM8L6jf",
+          "value": "={{ $env.AIRTABLE_BASE_ID }}",
           "mode": "list"
         },
         "table": {
           "__rl": true,
-          "value": "tbl_call_logs",
+          "value": "={{ $env.AIRTABLE_CALL_LOGS_TABLE_ID }}",
           "mode": "list"
         },
         "columns": {

@@ -25,7 +25,7 @@ Build a production-ready AI receptionist template that handles voice interaction
 - [x] **Follow-up System:** Send automated SMS/Email confirmations after successful interactions. (Added Twilio SMS node to post-call workflow)
 
 ### 5. Documentation & Template
-- [ ] **Import/Export:** Ensure the n8n workflow (JSON) is modular and easy to import.
+- [x] **Import/Export:** Ensure the n8n workflow (JSON) is modular and easy to import. (Replaced hardcoded IDs with environment variables)
 - [ ] **User Guide:** Create a README for end-users to set up their own version of the template.
 
 ## Verification

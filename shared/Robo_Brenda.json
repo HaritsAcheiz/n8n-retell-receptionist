@@ -165,7 +165,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"start\": \"{{ $json.args.requested_time }}\",\n  \"attendee\": {\n    \"name\": \"{{ $json.args.caller_name }}\",\n    \"email\": \"{{ $json.args.caller_emai }}\",\n    \"timeZone\": \"America/New_York\",\n    \"language\": \"en\"\n  },\n  \"eventTypeId\": 5250255,\n  \"allowConflicts\": true\n}",
+        "jsonBody": "={\n  \"start\": \"{{ $json.args.requested_time }}\",\n  \"attendee\": {\n    \"name\": \"{{ $json.args.caller_name }}\",\n    \"email\": \"{{ $json.args.caller_emai }}\",\n    \"timeZone\": \"America/New_York\",\n    \"language\": \"en\"\n  },\n  \"eventTypeId\": {{ $env.CALCOM_EVENT_TYPE_ID }},\n  \"allowConflicts\": true\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -219,17 +219,17 @@
         "operation": "create",
         "base": {
           "__rl": true,
-          "value": "app7Wh0FWazM8L6jf",
+          "value": "={{ $env.AIRTABLE_BASE_ID }}",
           "mode": "list",
           "cachedResultName": "ai_receptionist_crm",
-          "cachedResultUrl": "https://airtable.com/app7Wh0FWazM8L6jf"
+          "cachedResultUrl": "https://airtable.com/={{ $env.AIRTABLE_BASE_ID }}"
         },
         "table": {
           "__rl": true,
-          "value": "tblygKESbexy1qgwf",
+          "value": "={{ $env.AIRTABLE_TICKETS_TABLE_ID }}",
           "mode": "list",
           "cachedResultName": "support_tickets",
-          "cachedResultUrl": "https://airtable.com/app7Wh0FWazM8L6jf/tblygKESbexy1qgwf"
+          "cachedResultUrl": "https://airtable.com/={{ $env.AIRTABLE_BASE_ID }}/={{ $env.AIRTABLE_TICKETS_TABLE_ID }}"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -401,17 +401,17 @@
         "operation": "create",
         "base": {
           "__rl": true,
-          "value": "app7Wh0FWazM8L6jf",
+          "value": "={{ $env.AIRTABLE_BASE_ID }}",
           "mode": "list",
           "cachedResultName": "ai_receptionist_crm",
-          "cachedResultUrl": "https://airtable.com/app7Wh0FWazM8L6jf"
+          "cachedResultUrl": "https://airtable.com/={{ $env.AIRTABLE_BASE_ID }}"
         },
         "table": {
           "__rl": true,
-          "value": "tbl5KVGMjBRtC0XFa",
+          "value": "={{ $env.AIRTABLE_LEADS_TABLE_ID }}",
           "mode": "list",
           "cachedResultName": "leads",
-          "cachedResultUrl": "https://airtable.com/app7Wh0FWazM8L6jf/tbl5KVGMjBRtC0XFa"
+          "cachedResultUrl": "https://airtable.com/={{ $env.AIRTABLE_BASE_ID }}/={{ $env.AIRTABLE_LEADS_TABLE_ID }}"
         },
         "columns": {
           "mappingMode": "defineBelow",
